@@ -1,11 +1,14 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import "./ProductList.css";
 import CartItem from "./CartItem";
 import { addItem } from "./CartSlice";
 
 function ProductList({ onHomeClick }) {
 	const dispatch = useDispatch();
+
+	const cart = useSelector((state) => state.cart.items);
+	const cartQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
 
 	const [addedToCart, setAddedToCart] = useState({});
 	const [showCart, setShowCart] = useState(false);
@@ -265,8 +268,10 @@ function ProductList({ onHomeClick }) {
 
 	const handleCartClick = (e) => {
 		e.preventDefault();
+		setShowPlants(false);
 		setShowCart(true);
 	};
+
 	const handlePlantsClick = (e) => {
 		e.preventDefault();
 		setShowPlants(true);
@@ -284,6 +289,16 @@ function ProductList({ onHomeClick }) {
 
 		setAddedToCart((prevState) => ({ ...prevState, [plant.name]: true }));
 	};
+
+	useEffect(() => {
+		const formattedItems = {};
+
+		cart.map(({ name, quantity }) => {
+			formattedItems[name] = quantity;
+		});
+
+		setAddedToCart(formattedItems);
+	}, [showPlants]);
 
 	return (
 		<div>
@@ -349,6 +364,10 @@ function ProductList({ onHomeClick }) {
 										id="mainIconPathAttribute"
 									></path>
 								</svg>
+
+								<span className="cart_quantity_count">
+									{cartQuantity}
+								</span>
 							</h1>
 						</a>
 					</div>
