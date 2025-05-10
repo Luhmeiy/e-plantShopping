@@ -387,14 +387,26 @@ function ProductList({ onHomeClick }) {
 											{plant.cost}
 										</div>
 
-										<button
-											className="product-button"
-											onClick={() =>
-												handleAddToCart(plant)
-											}
-										>
-											Add to Cart
-										</button>
+										{Object.hasOwn(
+											addedToCart,
+											plant.name
+										) ? (
+											<button
+												className="product-button added-to-cart"
+												disabled
+											>
+												Added to Cart
+											</button>
+										) : (
+											<button
+												className="product-button"
+												onClick={() =>
+													handleAddToCart(plant)
+												}
+											>
+												Add to Cart
+											</button>
+										)}
 									</div>
 								))}
 							</div>
